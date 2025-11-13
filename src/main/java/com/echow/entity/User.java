@@ -1,6 +1,7 @@
 package com.echow.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,12 +22,15 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @NotNull(message = "Username must not be null")
   @Column(unique = true, nullable = false)
   private String username;
 
+  @NotNull(message = "Email must not be null")
   @Column(unique = true, nullable = false)
   private String email;
 
+  @NotNull(message = "Password must not be null")
   @Column(nullable = false)
   private String password;
 
