@@ -41,9 +41,7 @@ public class SecurityConfig {
                 auth.requestMatchers("/api/auth/**", "/api/public/**")
                     .permitAll()
                     .anyRequest()
-                    .authenticated())
-        .userDetailsService(customUserDetailsService);
-
+                    .authenticated());
     return http.build();
   }
 }
