@@ -58,4 +58,24 @@ public class User {
   protected void onUpdate() {
     updatedAt = LocalDateTime.now();
   }
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "user_skills",
+      joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "skill_id", referencedColumnName = "id"))
+  @Builder.Default
+  private Set<Skill> skills = new HashSet<>();
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+      name = "user_wanted_skills",
+      joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+      inverseJoinColumns = @JoinColumn(name = "skill_id", referencedColumnName = "id"))
+  @Builder.Default
+  private Set<Skill> wantedSkills = new HashSet<>();
+
+  @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
+  @Builder.Default
+  private Set<Offer> offers = new HashSet<>();
 }

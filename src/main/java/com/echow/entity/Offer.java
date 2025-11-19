@@ -53,4 +53,8 @@ public class Offer {
   protected void onUpdate() {
     updatedAt = LocalDateTime.now();
   }
+
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "creator_id", nullable = false)
+  private User creator;
 }
