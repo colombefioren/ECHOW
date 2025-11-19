@@ -13,11 +13,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 public class UserPrincipal implements UserDetails {
 
-  @Getter
-  private Long id;
+  @Getter private Long id;
   private String username;
-  @Getter
-  private String email;
+  @Getter private String email;
   private String password;
   private Collection<? extends GrantedAuthority> authorities;
 
@@ -45,5 +43,4 @@ public class UserPrincipal implements UserDetails {
   public String getUsername() {
     return username;
   }
-
 }
