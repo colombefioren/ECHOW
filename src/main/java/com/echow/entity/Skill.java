@@ -3,6 +3,8 @@ package com.echow.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,4 +31,12 @@ public class Skill {
   private String description;
 
   private String category;
+
+  @ManyToMany(mappedBy = "skills", fetch = FetchType.LAZY)
+  @Builder.Default
+  private Set<User> users = new HashSet<>();
+
+  @ManyToMany(mappedBy = "wantedSkills", fetch = FetchType.LAZY)
+  @Builder.Default
+  private Set<User> usersWanting = new HashSet<>();
 }

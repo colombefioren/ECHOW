@@ -57,4 +57,8 @@ public class Offer {
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
   @JoinColumn(name = "creator_id", nullable = false)
   private User creator;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "skill_id", nullable = false)
+  private Skill skill;
 }
