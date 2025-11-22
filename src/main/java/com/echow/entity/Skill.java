@@ -32,8 +32,7 @@ public class Skill {
 
   private String category;
 
-  @Builder.Default
-  private Integer popularity = 0;
+  @Builder.Default private Integer popularity = 0;
 
   @ManyToMany(mappedBy = "skills", fetch = FetchType.LAZY)
   @Builder.Default
