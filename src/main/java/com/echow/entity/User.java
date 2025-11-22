@@ -76,7 +76,19 @@ public class User {
   @Builder.Default
   private Set<Skill> wantedSkills = new HashSet<>();
 
-  @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @Builder.Default
   private Set<Offer> offers = new HashSet<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @Builder.Default
+  private Set<Request> requests = new HashSet<>();
+
+  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @Builder.Default
+  private Set<Review> reviewsReceived = new HashSet<>();
+
+  @OneToMany(mappedBy = "reviewer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @Builder.Default
+  private Set<Review> reviewsWritten = new HashSet<>();
 }
