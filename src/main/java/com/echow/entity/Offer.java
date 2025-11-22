@@ -75,4 +75,19 @@ public class Offer {
   @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @Builder.Default
   private Set<Review> reviews = new HashSet<>();
+
+  private boolean canBeRequested() {
+    return status == OfferStatus.AVAILABLE
+        && (maxParticipants == null || getAcceptedRequestsCount() < maxParticipants);
+  }
+
+  private long getAcceptedRequestsCount() {
+    return requests.stream()
+        .filter(request -> request.getStatus() == RequestStatus.ACCEPTED)
+        .count();
+  }
+
+  public boolean isCreator(User user){
+    return creator.getId().equals(user.getId());
+  }
 }
