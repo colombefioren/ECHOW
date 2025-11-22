@@ -60,15 +60,16 @@ public class AuthServiceImpl implements AuthService {
   @Override
   public String register(SignUpRequest signUpRequest) throws BadRequestException {
 
-    if(userRepository.existsByUsername(signUpRequest.getUsername())){
+    if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       throw new BadRequestException("Username is already taken!");
     }
 
-    if(userRepository.existsByEmail(signUpRequest.getEmail())){
+    if (userRepository.existsByEmail(signUpRequest.getEmail())) {
       throw new BadRequestException("Email is already in use!");
     }
 
-    User user = User.builder()
+    User user =
+        User.builder()
             .username(signUpRequest.getUsername())
             .email(signUpRequest.getEmail())
             .password(passwordEncoder.encode(signUpRequest.getPassword()))
