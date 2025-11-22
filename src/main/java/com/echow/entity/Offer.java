@@ -76,18 +76,18 @@ public class Offer {
   @Builder.Default
   private Set<Review> reviews = new HashSet<>();
 
-  private boolean canBeRequested() {
+  public boolean canBeRequested() {
     return status == OfferStatus.AVAILABLE
         && (maxParticipants == null || getAcceptedRequestsCount() < maxParticipants);
   }
 
-  private long getAcceptedRequestsCount() {
+  public long getAcceptedRequestsCount() {
     return requests.stream()
         .filter(request -> request.getStatus() == RequestStatus.ACCEPTED)
         .count();
   }
 
-  public boolean isCreator(User user){
+  public boolean isCreator(User user) {
     return creator.getId().equals(user.getId());
   }
 }
