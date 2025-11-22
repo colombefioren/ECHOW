@@ -32,8 +32,27 @@ public class Review {
 
   private LocalDateTime createdAt;
 
+  //User being reviewed
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "offer_id", nullable = false)
+  private Offer offer;
+
+  //User writing the review
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "reviewer_id", nullable = false)
+  private User reviewer;
+
   @PrePersist
   protected void onCreate() {
     createdAt = LocalDateTime.now();
+    if(offer.getCreator().equals(reviewer)){
+      type = "FOR_STUDENT";
+    }else{
+      type = "FOR_MENTOR";
+    }
   }
 }
