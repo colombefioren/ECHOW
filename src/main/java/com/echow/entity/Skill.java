@@ -1,7 +1,7 @@
 package com.echow.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +22,7 @@ public class Skill {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NotNull(message = "Name must not be null")
+  @NotBlank(message = "Name must not be empty")
   @Column(unique = true, nullable = false)
   private String name;
 
@@ -32,6 +32,8 @@ public class Skill {
 
   private String category;
 
+  @Builder.Default private Integer popularity = 0;
+
   @ManyToMany(mappedBy = "skills", fetch = FetchType.LAZY)
   @Builder.Default
   private Set<User> users = new HashSet<>();
@@ -39,4 +41,8 @@ public class Skill {
   @ManyToMany(mappedBy = "wantedSkills", fetch = FetchType.LAZY)
   @Builder.Default
   private Set<User> usersWanting = new HashSet<>();
+
+  @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @Builder.Default
+  private Set<Offer> offers = new HashSet<>();
 }

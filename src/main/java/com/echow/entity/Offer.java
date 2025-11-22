@@ -1,9 +1,12 @@
 package com.echow.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +23,7 @@ public class Offer {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @NotNull(message = "Title must not be null")
+  @NotBlank(message = "Title must not be empty")
   @Column(nullable = false)
   private String title;
 
@@ -36,6 +39,8 @@ public class Offer {
   @Column(nullable = false)
   private Integer durationMinutes;
 
+  @Builder.Default private Integer maxParticipants = 1;
+
   @Builder.Default
   @Enumerated(EnumType.STRING)
   private OfferStatus status = OfferStatus.AVAILABLE;
@@ -47,6 +52,7 @@ public class Offer {
   protected void onCreate() {
     createdAt = LocalDateTime.now();
     updatedAt = LocalDateTime.now();
+    status = OfferStatus.AVAILABLE;
   }
 
   @PreUpdate
@@ -61,4 +67,27 @@ public class Offer {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "skill_id", nullable = false)
   private Skill skill;
+
+  @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @Builder.Default
+  private Set<Request> requests = new HashSet<>();
+
+  @OneToMany(mappedBy = "offer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+  @Builder.Default
+  private Set<Review> reviews = new HashSet<>();
+
+  public boolean canBeRequested() {
+    return status == OfferStatus.AVAILABLE
+        && (maxParticipants == null || getAcceptedRequestsCount() < maxParticipants);
+  }
+
+  public long getAcceptedRequestsCount() {
+    return requests.stream()
+        .filter(request -> request.getStatus() == RequestStatus.ACCEPTED)
+        .count();
+  }
+
+  public boolean isCreator(User user) {
+    return creator.getId().equals(user.getId());
+  }
 }
