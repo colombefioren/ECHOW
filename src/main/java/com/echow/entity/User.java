@@ -41,6 +41,10 @@ public class User {
 
   @Builder.Default private Integer skillPoints = 100;
 
+  @Builder.Default private Double averageRating = 0.0;
+
+  @Builder.Default private Integer completedSessions = 0;
+
   @ElementCollection(fetch = FetchType.EAGER)
   @Enumerated(EnumType.STRING)
   @Builder.Default
@@ -53,6 +57,9 @@ public class User {
   protected void onCreate() {
     createdAt = LocalDateTime.now();
     updatedAt = LocalDateTime.now();
+    if (roles.isEmpty()) {
+      roles.add(Role.STUDENT);
+    }
   }
 
   @PreUpdate
@@ -91,4 +98,26 @@ public class User {
   @OneToMany(mappedBy = "reviewer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
   @Builder.Default
   private Set<Review> reviewsWritten = new HashSet<>();
+
+  public boolean canAfford(Integer points) {
+    return this.skillPoints >= points;
+  }
+
+  public void deductPoints(Integer points) {
+    if (!canAfford(points)) {
+      throw new RuntimeException("Insufficient skill points");
+    }
+    this.skillPoints -= points;
+  }
+
+  public void addPoints(Integer points) {
+    this.skillPoints += points;
+  }
+
+  public void updateRating() {
+    if (reviewsReceived != null && !reviewsReceived.isEmpty()) {
+      this.averageRating =
+          reviewsReceived.stream().mapToInt(Review::getRating).average().orElse(0.0);
+    }
+  }
 }
