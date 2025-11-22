@@ -35,4 +35,9 @@ public class AuthController {
       return ResponseEntity.badRequest().body("Invalid credentials");
     }
   }
+
+  @GetMapping("/test")
+  public ResponseEntity<String> test() {
+    return ResponseEntity.ok("Auth endpoint is working!");
+  }
 }
