@@ -3,12 +3,15 @@ package com.echow.service.impl;
 import com.echow.dto.JwtResponse;
 import com.echow.dto.LoginRequest;
 import com.echow.dto.SignUpRequest;
+import com.echow.entity.User;
 import com.echow.repository.UserRepository;
 import com.echow.security.JwtTokenProvider;
 import com.echow.security.UserPrincipal;
 import com.echow.service.AuthService;
 import jakarta.transaction.Transactional;
+import java.util.HashSet;
 import java.util.stream.Collectors;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -55,7 +58,27 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Override
-  public String register(SignUpRequest signUpRequest) {
-    return "";
+  public String register(SignUpRequest signUpRequest) throws BadRequestException {
+
+    if(userRepository.existsByUsername(signUpRequest.getUsername())){
+      throw new BadRequestException("Username is already taken!");
+    }
+
+    if(userRepository.existsByEmail(signUpRequest.getEmail())){
+      throw new BadRequestException("Email is already in use!");
+    }
+
+    User user = User.builder()
+            .username(signUpRequest.getUsername())
+            .email(signUpRequest.getEmail())
+            .password(passwordEncoder.encode(signUpRequest.getPassword()))
+            .firstName(signUpRequest.getFirstName())
+            .lastName(signUpRequest.getLastName())
+            .roles(new HashSet<>())
+            .build();
+
+    userRepository.save(user);
+
+    return "User registered successfully!";
   }
 }
