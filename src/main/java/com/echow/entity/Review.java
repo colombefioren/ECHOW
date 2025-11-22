@@ -32,7 +32,7 @@ public class Review {
 
   private LocalDateTime createdAt;
 
-  //User being reviewed
+  // User being reviewed
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
@@ -41,7 +41,7 @@ public class Review {
   @JoinColumn(name = "offer_id", nullable = false)
   private Offer offer;
 
-  //User writing the review
+  // User writing the review
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "reviewer_id", nullable = false)
   private User reviewer;
@@ -49,10 +49,19 @@ public class Review {
   @PrePersist
   protected void onCreate() {
     createdAt = LocalDateTime.now();
-    if(offer.getCreator().equals(reviewer)){
+    if (offer.getCreator().equals(reviewer)) {
       type = "FOR_STUDENT";
-    }else{
+    } else {
       type = "FOR_MENTOR";
     }
+  }
+
+  public boolean isValidRating() {
+    return rating >= 1 && rating <= 5;
+  }
+
+  public boolean canUserReview(User user, Request request) {
+    return request.getStatus() == RequestStatus.COMPLETED
+        && (request.getUser().equals(user) || request.getOffer().getCreator().equals(user));
   }
 }
