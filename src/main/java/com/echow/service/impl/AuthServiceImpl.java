@@ -3,6 +3,7 @@ package com.echow.service.impl;
 import com.echow.dto.JwtResponse;
 import com.echow.dto.LoginRequest;
 import com.echow.dto.SignUpRequest;
+import com.echow.entity.Role;
 import com.echow.entity.User;
 import com.echow.repository.UserRepository;
 import com.echow.security.JwtTokenProvider;
@@ -10,6 +11,7 @@ import com.echow.security.UserPrincipal;
 import com.echow.service.AuthService;
 import jakarta.transaction.Transactional;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
             .password(passwordEncoder.encode(signUpRequest.getPassword()))
             .firstName(signUpRequest.getFirstName())
             .lastName(signUpRequest.getLastName())
-            .roles(new HashSet<>())
+            .roles(new HashSet<>(Set.of(Role.STUDENT)))
             .build();
 
     userRepository.save(user);
